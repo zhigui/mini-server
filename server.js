@@ -2,28 +2,66 @@ var arguments = process.argv.splice(2);
 var PORT = arguments[0] || 8000;
 var http = require('http'), url= require("url"), path= require("path"), fs=require("fs"), os=require('os');
 
+
+//More media types http://www.iana.org/assignments/media-types/
 var mime = {
+    // text
     "css": "text/css",
-    "gif": "image/gif",
+    "js": "text/javascript",
+    "csv": "text/csv",
+    "htm": "text/html",
     "html": "text/html",
+    "txt": "text/plain",
+    "text": "text/plain",
+    "conf": "text/plain",
+    "log": "text/plain",
+    "vtt": "text/vtt",
+    "wml": "text/vnd.wap.wml",
+    "wmls": "text/vnd.wap.wmlscript",
+    "appcache": "text/cache-manifest",
+
+
+    // image
+    "bmp": "image/bmp",
+    "gif": "image/gif",
     "ico": "image/x-icon",
+    "jpe": "image/jpeg",
     "jpeg": "image/jpeg",
     "jpg": "image/jpeg",
-    "js": "text/javascript",
-    "json": "application/json",
-    "pdf": "application/pdf",
     "png": "image/png",
     "svg": "image/svg+xml",
-    "swf": "application/x-shockwave-flash",
+    "webp": "image/webp",
     "tiff": "image/tiff",
-    "txt": "text/plain",
+
+    // application
+    "json": "application/json",
+    "xml": "application/xml",
+    "atom": "application/atom+xml",
+    "pdf": "application/pdf",
+    "swf": "application/x-shockwave-flash",
+    "doc": "application/msword",
+    "docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "ppt": "application/vnd.ms-powerpoint",
+    "pptx": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "xls": "application/vnd.ms-excel",
+    "xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    
+    // audio
     "wav": "audio/x-wav",
     "wma": "audio/x-ms-wma",
-    "wmv": "video/x-ms-wmv",
-    "xml": "text/xml",
+    "ogg": "audio/ogg",
+    "m3u": "audio/x-mpegurl",
+    "weba": "audio/webm",
+
+    // video
     "mp4": "video/mp4",
-    "vtt": "text/vtt"
+    "3gp": "video/3gpp",
+    "mpeg": "video/mpeg",
+    "f4v":  "video/x-f4v",
+    "wmv": "video/x-ms-wmv",
+    "avi": "video/x-msvideo"
 };
+
 var server = http.createServer(function (request, response) {
     var pathname = url.parse(request.url).pathname;
     var realPath = "./" + pathname;
