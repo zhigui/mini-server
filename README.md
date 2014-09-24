@@ -16,9 +16,12 @@ $ node server.js
 The Server will running at port 8000 by default.
 Then you can Access your project by the path `http://localhost:8000/filepath.html`. (The server.js will console the avalible host address in the terminal).
 
-###change the server port
+###Change the server port
 You can also change the default port by add the port number:
 ```
 $ node server.js 9999
 ```
 
+###Fetch remote resource
+Request the remote resource to local host to access.
+`http://localhost:8000/fetch?url=http://www.google.com`

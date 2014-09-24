@@ -64,17 +64,49 @@ var mime = {
 
 var server = http.createServer(function (request, response) {
     var pathname = url.parse(request.url).pathname;
-    var realPath = "./" + pathname;
+    var query = url.parse(request.url).query;
+    var realPath = "." + pathname;
+     
     fs.exists(realPath, function (exists) {
         if (!exists) {
-            response.writeHead(404, {
-                'Content-Type': 'text/html'
-            });
+            if(pathname == '/fetch'){
+                var arr=query.split('&');
+                var params={};
+                for(var i=0; i<arr.length; i++){
+                   var  param_arr=arr[i].split('=');
+                   params[param_arr[0]]=param_arr[1];
+                }
+                if(params.url){
+                    var chunks = [],
+                        size = 0;
+                    http.get(params.url, function(res) {
+                        res.on("data" , function(chunk){
+                            chunks.push(chunk);
+                            size += chunk.length;
+                        });
 
-            response.write('<!DOCTYPE> <html><head> <title>404 Not Found</title> </head><body> <h1>Not Found</h1> <p>The requested URL '+pathname+' was not found on this server.</p> </body></html>');
-            response.end();
+                        res.on("end" , function(){
+                            var data = Buffer.concat(chunks , size);                         
+                            response.writeHead(200, {'Content-Type': res.headers['content-type']});
+                            response.write(data);
+                            response.end();
+                        });
+                     }).on('error', function(e) {
+                      console.log("Got error: " + e.message);
+                      response.end();
+                    });
+                }
+                
+            }else{
+                response.writeHead(404, {
+                    'Content-Type': 'text/html'
+                });
+
+                response.write('<!DOCTYPE> <html><head> <title>404 Not Found</title> </head><body> <h1>Not Found</h1> <p>The requested URL '+pathname+' was not found on this server.</p> </body></html>');
+                response.end();
+            }
+            
         } else {
-            console.log(realPath);
             fs.readFile(realPath, "binary", function (err, file) {
                 if (err) {
                     response.writeHead(500, {
